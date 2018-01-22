@@ -31,7 +31,7 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
 
     const glyphs_length = $glyphs.length;
     let iconList = '';
-    let counter = 59392;
+    let counter = 63488;
     for (let i = 0; i < glyphs_length; i++) {
         const glyphName = $glyphs[i].getAttribute('glyph-name');
         const unicode = $glyphs[i].getAttribute('unicode');
