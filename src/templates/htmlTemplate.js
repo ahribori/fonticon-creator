@@ -4,7 +4,7 @@ export default (fontFamily, iconList) => `
 <head>
     <meta charset="UTF-8">
     <title>Demo</title>
-    <link rel="stylesheet" href="${fontFamily}.css">
+    <link rel="stylesheet" href="css/${fontFamily}.css">
 </head>
 <body>
 ${iconList}

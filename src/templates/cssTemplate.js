@@ -6,12 +6,12 @@ export default ({
 
     return `@font-face {
   font-family: '${fontFamily}';
-  src: url('./${fontFamily}.eot?${generateTime}');
-  src: url('./${fontFamily}.eot?${generateTime}#iefix') format('embedded-opentype'),
-       url('./${fontFamily}.woff2?${generateTime}') format('woff2'),
-       url('./${fontFamily}.woff?${generateTime}') format('woff'),
-       url('./${fontFamily}.ttf?${generateTime}') format('truetype'),
-       url('./${fontFamily}.svg?${generateTime}#fontello') format('svg');
+  src: url('../fonts/${fontFamily}.eot?${generateTime}');
+  src: url('../fonts/${fontFamily}.eot?${generateTime}#iefix') format('embedded-opentype'),
+       url('../fonts/${fontFamily}.woff2?${generateTime}') format('woff2'),
+       url('../fonts/${fontFamily}.woff?${generateTime}') format('woff'),
+       url('../fonts/${fontFamily}.ttf?${generateTime}') format('truetype'),
+       url('../fonts/${fontFamily}.svg?${generateTime}#fontello') format('svg');
   font-weight: normal;
   font-style: normal;
 }

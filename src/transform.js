@@ -3,14 +3,14 @@ import path from 'path';
 import { JSDOM } from 'jsdom';
 import chalk from 'chalk';
 import id from 'shortid';
-import cssTemplate from './cssTemplate';
-import svgTemplate from './svgTemplate';
 import toUnicode from './toUnicode';
+import cssTemplate from './templates/cssTemplate';
+import svgTemplate from './templates/svgTemplate';
+import htmlTemplate from "./templates/htmlTemplate";
 import svg2ttf from 'svg2ttf';
 import ttf2eot from 'ttf2eot';
 import ttf2woff from 'ttf2woff';
 import ttf2woff2 from 'ttf2woff2';
-import htmlTemplate from "./htmlTemplate";
 
 export default (svgPath, prefix) => new Promise((resolve, reject) => {
 
@@ -34,7 +34,7 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
     let counter = 63488;
     for (let i = 0; i < glyphs_length; i++) {
         const glyphName = $glyphs[i].getAttribute('glyph-name');
-        const unicode = $glyphs[i].getAttribute('unicode');
+        // const unicode = $glyphs[i].getAttribute('unicode');
         // if (unicode) {
         //     buffer += `.${prefix}-${glyphName}:before { content: '${toUnicode(unicode)}' } \n`;
         // } else {
@@ -52,11 +52,24 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
     }
 
     const hash = id.generate();
-    const outputDirName = `${fontFamily}_${hash}`;
-    const outputDirFullPath = path.resolve(`./output/${outputDirName}`);
-    fs.mkdirSync(outputDirFullPath);
+    const now = new Date();
+    const buildTime =
+        now.getUTCFullYear() +
+        ('0' + (now.getUTCMonth() + 1)).slice(-2) +
+        ('0' + now.getUTCDate()).slice(-2) + '_' +
+        ('0' + now.getUTCHours()).slice(-2) +
+        ('0' + now.getUTCMinutes()).slice(-2) +
+        ('0' + now.getUTCSeconds()).slice(-2);
 
-    const newSvgPath = path.join(outputDirFullPath, `${fontFamily}.svg`);
+    const outputDirName = `${buildTime}_${fontFamily}`;
+    const outputDirFullPath = path.resolve(`./output/${outputDirName}`);
+    const cssPath = path.join(outputDirFullPath, 'css');
+    const fontPath = path.join(outputDirFullPath, 'fonts');
+    fs.mkdirSync(outputDirFullPath);
+    fs.mkdirSync(cssPath);
+    fs.mkdirSync(fontPath);
+
+    const newSvgPath = path.join(fontPath, `${fontFamily}.svg`);
     const newSvgFile = svgTemplate(dom.window.document.body.innerHTML.replace(/{{amp}}/gi, '&'));
     fs.writeFileSync(newSvgPath, newSvgFile, 'utf-8');
     console.log(chalk.greenBright(`${fontFamily}.svg 파일이 이동되었습니다`));
@@ -77,7 +90,7 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
      */
     const transformSVGtoCSS = new Promise((resolve, reject) => {
         console.log('Start to generate css file...');
-        fs.writeFile(path.join(outputDirFullPath, `${fontFamily}.css`), buffer, 'utf-8', err => {
+        fs.writeFile(path.join(cssPath, `${fontFamily}.css`), buffer, 'utf-8', err => {
             if (err) {
                 return reject(err);
             }
@@ -94,7 +107,7 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
     const transformSVGtoTTF = () => new Promise((resolve, reject) => {
         console.log('Start to generate ttf file...');
         const ttf = svg2ttf(newSvg, {});
-        fs.writeFile(path.join(outputDirFullPath, `${fontFamily}.ttf`), new Buffer(ttf.buffer), 'utf-8', err => {
+        fs.writeFile(path.join(fontPath, `${fontFamily}.ttf`), new Buffer(ttf.buffer), 'utf-8', err => {
             if (err) {
                 return reject(err);
             }
@@ -115,7 +128,7 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
     const transformTTFtoEOT = (ttfOutput) => new Promise((resolve, reject) => {
         console.log('Start to generate eot file...');
         const eot = ttf2eot(ttfOutput);
-        fs.writeFile(path.join(outputDirFullPath, `${fontFamily}.eot`), new Buffer(eot.buffer), 'utf-8', err => {
+        fs.writeFile(path.join(fontPath, `${fontFamily}.eot`), new Buffer(eot.buffer), 'utf-8', err => {
             if (err) {
                 return reject(err);
             }
@@ -132,7 +145,7 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
     const transformTTFtoWOFF = (ttfOutput) => new Promise((resolve, reject) => {
         console.log('Start to generate woff file...');
         const woff = ttf2woff(ttfOutput);
-        fs.writeFile(path.join(outputDirFullPath, `${fontFamily}.woff`), new Buffer(woff.buffer), 'utf-8', err => {
+        fs.writeFile(path.join(fontPath, `${fontFamily}.woff`), new Buffer(woff.buffer), 'utf-8', err => {
             if (err) {
                 return reject(err);
             }
@@ -150,7 +163,7 @@ export default (svgPath, prefix) => new Promise((resolve, reject) => {
     const transformTTFtoWOFF2 = (ttfOutput) => new Promise((resolve, reject) => {
         console.log('Start to generate woff2 file...');
         const woff2 = ttf2woff2(ttfOutput);
-        fs.writeFile(path.join(outputDirFullPath, `${fontFamily}.woff2`), woff2, 'utf-8', err => {
+        fs.writeFile(path.join(fontPath, `${fontFamily}.woff2`), woff2, 'utf-8', err => {
             if (err) {
                 return reject(err);
             }
