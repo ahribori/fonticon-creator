@@ -18,6 +18,17 @@
     "cross-env": "^5.1.1",
     "nodemon": "^1.12.1"
   },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "cli-clear": "^1.0.4",
+    "figlet": "^1.2.0",
+    "inquirer": "^4.0.1",
+    "jsdom": "^11.5.1",
+    "svg2ttf": "^4.1.0",
+    "ttf2eot": "^2.0.0",
+    "ttf2woff": "^2.0.1",
+    "ttf2woff2": "^2.0.3"
+  },
   "babel": {
     "env": {
       "development": {
@@ -37,19 +48,5 @@
         ]
       }
     }
-  },
-  "dependencies": {
-    "chalk": "^2.3.0",
-    "cli-clear": "^1.0.4",
-    "clui": "^0.3.6",
-    "figlet": "^1.2.0",
-    "inquirer": "^4.0.1",
-    "jsdom": "^11.5.1",
-    "minimist": "^1.2.0",
-    "shortid": "^2.2.8",
-    "svg2ttf": "^4.1.0",
-    "ttf2eot": "^2.0.0",
-    "ttf2woff": "^2.0.1",
-    "ttf2woff2": "^2.0.3"
   }
 }
