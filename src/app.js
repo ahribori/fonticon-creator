@@ -11,12 +11,24 @@ console.log(
     chalk.yellow(figlet.textSync('SVG to FONTICON'))
 );
 
-const files = fs.readdirSync(path.resolve('input'));
+const ROOT = path.resolve('.');
+const inputPath = path.join(ROOT, 'input');
+const basePath = path.join(ROOT, '__base__');
+fs.existsSync(inputPath) || fs.mkdirSync(inputPath);
+fs.existsSync(basePath) || fs.mkdirSync(basePath);
+const files = fs.readdirSync(inputPath);
+const basedFiles = fs.readdirSync(basePath);
 const svgFiles = [];
+const pathsOfBasedSvgFile = [];
 
 files.map(file => {
     if (new RegExp(/\.svg$/).test(file)) {
         svgFiles.push(file);
+    }
+});
+basedFiles.forEach((file) => {
+    if (new RegExp(/\.svg$/).test(file)) {
+        pathsOfBasedSvgFile.push(path.join(basePath, file));
     }
 });
 
@@ -41,5 +53,5 @@ const questions = [
 
 inquirer.prompt(questions).then((answer) => {
     const { svg_file, prefix } = answer;
-    transform(path.resolve('input', svg_file), prefix);
+    transform(path.resolve('input', svg_file), pathsOfBasedSvgFile, prefix);
 });
